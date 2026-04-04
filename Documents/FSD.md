@@ -9,7 +9,7 @@
 
 ## 1. Overview
 
-This project replaces the standard RC car controller with an Xbox Controller connected over BLE to an ESP32-WROOM. The ESP32 acts as the BLE host (via Bluepad2), interprets controller inputs, and drives the car's motors and headlights through a TB6612FNG H-Bridge motor driver.
+This project replaces the standard RC car controller with an Xbox Controller connected over BLE to an ESP32-WROOM. The ESP32 acts as the BLE host (via [Bluepad32](https://github.com/ricardoquesada/bluepad32)), interprets controller inputs, and drives the car's motors and headlights through a TB6612FNG H-Bridge motor driver.
 
 ---
 
@@ -18,7 +18,7 @@ This project replaces the standard RC car controller with an Xbox Controller con
 ```
 [Xbox Controller]
       |
-      | BLE (Bluepad2)
+      | BLE (Bluepad32)
       |
 [ESP32-WROOM]
       |
@@ -56,7 +56,7 @@ This project replaces the standard RC car controller with an Xbox Controller con
 
 | ID | Requirement |
 |---|---|
-| BLE-01 | The ESP32 shall initialize as a BLE host using the Bluepad2 library. |
+| BLE-01 | The ESP32 shall initialize as a BLE host using the [Bluepad32](https://github.com/ricardoquesada/bluepad32) library. |
 | BLE-02 | The ESP32 shall accept a pairing request from an Xbox Controller. |
 | BLE-03 | The system shall reconnect automatically to the last paired controller on power-up. |
 | BLE-04 | Controller disconnection shall immediately stop all motor outputs and turn off headlights. |
@@ -142,7 +142,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | Component | Responsibility |
 |---|---|
 | `main.c` | App entry point; task initialization |
-| `ble_controller.c/.h` | Bluepad2 integration; BLE event handling |
+| `ble_controller.c/.h` | Bluepad32 integration; BLE event handling |
 | `motor_control.c/.h` | TB6612FNG PWM/direction control for both motors |
 | `steering.c/.h` | Stepper motor abstraction; position tracking |
 | `led.c/.h` | Headlight GPIO control |
@@ -164,7 +164,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | Tool / Library | Purpose |
 |---|---|
 | ESP-IDF v5.4.x | Base SDK, FreeRTOS, Wi-Fi, OTA, BLE |
-| Bluepad2 | Xbox Controller BLE host library |
+| [Bluepad32](https://github.com/ricardoquesada/bluepad32) | Xbox Controller BLE host library |
 | ESP32-Workbench | Flashing, testing, serial monitoring |
 
 ---

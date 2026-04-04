@@ -150,7 +150,7 @@ rc-xbox-controller/
 | Dependency | Version | Source |
 |------------|---------|--------|
 | ESP-IDF | v5.4.1 | `~/esp/esp-idf` (installed) |
-| Bluepad32 | latest | `components/bluepad32` (git submodule) |
+| [Bluepad32](https://github.com/ricardoquesada/bluepad32) | latest | `components/bluepad32` (git submodule) |
 
 ---
 

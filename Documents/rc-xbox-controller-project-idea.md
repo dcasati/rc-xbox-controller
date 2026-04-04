@@ -1,6 +1,6 @@
 # rc xbox controller project
 
-The rc xbox controller a solution consisting of an ESP32 wroom that replaces the standard controller from a RC car. The XBOX Controller communicates with the ESP32 over BLE using Bluepad2. Together allow for someone to operate the car using a XBOX controller.
+The rc xbox controller a solution consisting of an ESP32 wroom that replaces the standard controller from a RC car. The XBOX Controller communicates with the ESP32 over BLE using [Bluepad32](https://github.com/ricardoquesada/bluepad32). Together allow for someone to operate the car using a XBOX controller.
 
 ## Main Function
 
