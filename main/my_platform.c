@@ -99,6 +99,11 @@ static void my_platform_on_controller_data(uni_hid_device_t* d, uni_controller_t
 
     uni_gamepad_t* gp = &ctl->gamepad;
 
+    // Debug: log raw gamepad values
+    logi("brake=%d throttle=%d axis_x=%d axis_y=%d axis_rx=%d axis_ry=%d buttons=0x%04x misc=0x%02x dpad=0x%02x\n",
+         gp->brake, gp->throttle, gp->axis_x, gp->axis_y, gp->axis_rx, gp->axis_ry,
+         gp->buttons, gp->misc_buttons, gp->dpad);
+
     // --- Drive motors (LT = forward, RT = reverse) ---
     // Bluepad32: brake = LT (0-1023), throttle = RT (0-1023)
     int32_t drive_speed = 0;

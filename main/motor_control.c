@@ -24,6 +24,8 @@ static const char* TAG = "motor";
 // Dead zone: ignore trigger values below this threshold (~5% of 1023)
 #define MOTOR_DEAD_ZONE  50
 
+static int32_t last_logged_speed = 0;
+
 void motor_control_init(void) {
     // Configure direction GPIOs
     gpio_config_t io_conf = {
@@ -90,6 +92,11 @@ void motor_set_speed(int32_t speed) {
 
     ledc_set_duty(LEDC_HIGH_SPEED_MODE, MOTOR_PWM_CHANNEL, duty);
     ledc_update_duty(LEDC_HIGH_SPEED_MODE, MOTOR_PWM_CHANNEL);
+
+    if (speed != last_logged_speed) {
+        ESP_LOGI(TAG, "speed=%ld duty=%lu dir=%s", (long)speed, (unsigned long)duty, speed > 0 ? "FWD" : "REV");
+        last_logged_speed = speed;
+    }
 }
 
 void motor_stop(void) {

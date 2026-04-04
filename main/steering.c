@@ -21,8 +21,10 @@ static const char* TAG = "steering";
 #define STEER_PWM_FREQ_HZ   1000
 #define STEER_PWM_RESOLUTION LEDC_TIMER_10_BIT  // 0-1023
 
-// Dead zone: ignore thumbstick values near center (~10% of 512)
-#define STEER_DEAD_ZONE  50
+// Dead zone: ignore thumbstick values near center (~15% of 512)
+#define STEER_DEAD_ZONE  80
+
+static int32_t last_logged_pos = 0;
 
 void steering_init(void) {
     // Configure direction GPIOs
@@ -88,6 +90,11 @@ void steering_set_position(int32_t x_axis) {
 
     ledc_set_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL, duty);
     ledc_update_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL);
+
+    if (x_axis != last_logged_pos) {
+        ESP_LOGI(TAG, "pos=%ld duty=%lu dir=%s", (long)x_axis, (unsigned long)duty, x_axis > 0 ? "RIGHT" : "LEFT");
+        last_logged_pos = x_axis;
+    }
 }
 
 void steering_stop(void) {
