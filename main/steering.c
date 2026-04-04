@@ -11,9 +11,9 @@
 static const char* TAG = "steering";
 
 // TB6612FNG Channel B — Stepper motor (steering)
-#define STEER_BIN1_GPIO  GPIO_NUM_32
-#define STEER_BIN2_GPIO  GPIO_NUM_33
-#define STEER_PWMB_GPIO  GPIO_NUM_14
+#define STEER_BIN1_GPIO  GPIO_NUM_27
+#define STEER_BIN2_GPIO  GPIO_NUM_14
+#define STEER_PWMB_GPIO  GPIO_NUM_12
 
 // LEDC config — use different channel/timer than drive motor
 #define STEER_PWM_CHANNEL   LEDC_CHANNEL_1

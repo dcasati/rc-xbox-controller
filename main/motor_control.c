@@ -11,9 +11,9 @@ static const char* TAG = "motor";
 
 // TB6612FNG Channel A — Drive motors (front + rear in parallel)
 #define MOTOR_AIN1_GPIO  GPIO_NUM_25
-#define MOTOR_AIN2_GPIO  GPIO_NUM_26
-#define MOTOR_PWMA_GPIO  GPIO_NUM_27
-#define MOTOR_STBY_GPIO  GPIO_NUM_12
+#define MOTOR_AIN2_GPIO  GPIO_NUM_33
+#define MOTOR_PWMA_GPIO  GPIO_NUM_32
+#define MOTOR_STBY_GPIO  GPIO_NUM_26
 
 // LEDC config
 #define MOTOR_PWM_CHANNEL  LEDC_CHANNEL_0

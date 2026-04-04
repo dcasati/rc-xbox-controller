@@ -121,15 +121,17 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 
 | TB6612FNG Pin | ESP32 GPIO | Function |
 |---|---|---|
+| TB6612FNG Pin | ESP32 GPIO | Function |
+|---|---|---|
 | AIN1 | GPIO 25 | Drive motors direction A |
-| AIN2 | GPIO 26 | Drive motors direction B |
-| PWMA | GPIO 27 | Drive motors PWM (front + rear DC in parallel) |
-| BIN1 | GPIO 32 | Stepper motor direction A |
-| BIN2 | GPIO 33 | Stepper motor direction B |
-| PWMB | GPIO 14 | Stepper motor PWM |
-| STBY | GPIO 12 | H-Bridge standby (active HIGH = enabled) |
+| AIN2 | GPIO 33 | Drive motors direction B |
+| PWMA | GPIO 32 | Drive motors PWM (front + rear DC in parallel) |
+| BIN1 | GPIO 27 | Stepper motor direction A |
+| BIN2 | GPIO 14 | Stepper motor direction B |
+| PWMB | GPIO 12 | Stepper motor PWM |
+| STBY | GPIO 26 | H-Bridge standby (active HIGH = enabled) |
 | VM | 5V supply | Motor power (measured 4.6–5V) |
-| LED | GPIO 4 | Front LED |
+| LED | GPIO 13 | Front LED |
 
 > GPIO assignments are preliminary and subject to revision based on PCB layout and signal conflicts.
 
