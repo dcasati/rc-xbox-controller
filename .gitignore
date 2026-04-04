@@ -5,3 +5,5 @@ build/
 *.map
 sdkconfig.old
 hello_world/
+.DS_Store
+._*
