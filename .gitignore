@@ -3,6 +3,7 @@ build/
 *.bin
 *.elf
 *.map
+sdkconfig
 sdkconfig.old
 hello_world/
 .DS_Store
