@@ -34,28 +34,51 @@ static const char* TAG = "steering";
 // Dead zone: ignore thumbstick values near center
 #define STEER_DEAD_ZONE  80
 
-// Position control
-// ADC reads 0-4095 (12-bit). Calibrated from actual pot readings.
+// Position control\n// ADC reads 0-4095 (12-bit). Calibrated from actual pot readings.
+// Pot is inverted: higher values = left, lower values = right
 #define POT_CENTER    2160
-#define POT_MIN       1800    // Full left (calibrate)
-#define POT_MAX       2500    // Full right (calibrate)
-#define POS_TOLERANCE 40      // Stop motor when within this range of target
+#define POT_LEFT      2475    // Full left (high pot value)
+#define POT_RIGHT     1200    // Full right (low pot value)
+#define POS_TOLERANCE 80      // Stop motor when within this range of target
 #define STEER_MIN_PWM 150     // Minimum PWM to overcome static friction
 #define STEER_MAX_PWM 500     // Cap max PWM to avoid slamming
 
 static adc_oneshot_unit_handle_t adc_handle = NULL;
 static int32_t last_logged_pos = 0;
 
-static int read_pot(void) {
-    // Average multiple samples to reduce motor noise
+// Running average for ADC noise rejection
+#define POT_HISTORY_SIZE 4
+static int pot_history[POT_HISTORY_SIZE];
+static int pot_history_idx = 0;
+static bool pot_history_filled = false;
+
+static int read_pot_raw(void) {
+    // Average multiple samples in one burst
     int32_t sum = 0;
-    const int samples = 16;
+    const int samples = 32;
     for (int i = 0; i < samples; i++) {
         int val = 0;
         adc_oneshot_read(adc_handle, POT_ADC_CHANNEL, &val);
         sum += val;
     }
     return (int)(sum / samples);
+}
+
+static int read_pot(void) {
+    // Read raw and add to running average
+    int raw = read_pot_raw();
+    pot_history[pot_history_idx] = raw;
+    pot_history_idx = (pot_history_idx + 1) % POT_HISTORY_SIZE;
+    if (pot_history_idx == 0) pot_history_filled = true;
+
+    int count = pot_history_filled ? POT_HISTORY_SIZE : pot_history_idx;
+    if (count == 0) return raw;
+
+    int32_t sum = 0;
+    for (int i = 0; i < count; i++) {
+        sum += pot_history[i];
+    }
+    return (int)(sum / count);
 }
 
 void steering_init(void) {
@@ -117,10 +140,19 @@ void steering_set_position(int32_t x_axis) {
         return;
     }
 
-    // Map thumbstick (-512..511) to target pot value (POT_MIN..POT_MAX)
-    int32_t target = POT_CENTER + (x_axis * (int32_t)(POT_MAX - POT_MIN)) / 1024;
-    if (target < POT_MIN) target = POT_MIN;
-    if (target > POT_MAX) target = POT_MAX;
+    // Map thumbstick (-512..511) to target pot value
+    // Left (negative x) = higher pot value (POT_LEFT)
+    // Right (positive x) = lower pot value (POT_RIGHT)
+    int32_t target;
+    if (x_axis < 0) {
+        // Left: map -512..0 → POT_CENTER..POT_RIGHT
+        target = POT_CENTER - (-x_axis * (int32_t)(POT_CENTER - POT_RIGHT)) / 512;
+    } else {
+        // Right: map 0..511 → POT_CENTER..POT_LEFT
+        target = POT_CENTER + (x_axis * (int32_t)(POT_LEFT - POT_CENTER)) / 512;
+    }
+    if (target < POT_RIGHT) target = POT_RIGHT;
+    if (target > POT_LEFT) target = POT_LEFT;
 
     // Read current position
     int current = read_pot();
@@ -147,7 +179,7 @@ void steering_set_position(int32_t x_axis) {
     }
 
     // Proportional speed — larger error = faster correction
-    uint32_t duty = (abs(error) * STEER_MAX_PWM) / (POT_MAX - POT_CENTER);
+    uint32_t duty = (abs(error) * STEER_MAX_PWM) / (POT_LEFT - POT_RIGHT);
     if (duty < STEER_MIN_PWM) duty = STEER_MIN_PWM;
     if (duty > STEER_MAX_PWM) duty = STEER_MAX_PWM;
 
