@@ -35,21 +35,27 @@ static const char* TAG = "steering";
 #define STEER_DEAD_ZONE  80
 
 // Position control
-// ADC reads 0-4095 (12-bit). Center ~2048. Adjust after calibration.
-#define POT_CENTER    2048
-#define POT_MIN       500     // Full left (calibrate)
-#define POT_MAX       3500    // Full right (calibrate)
-#define POS_TOLERANCE 80      // Stop motor when within this range of target
-#define STEER_MIN_PWM 200     // Minimum PWM to overcome static friction
-#define STEER_MAX_PWM 800     // Cap max PWM to avoid slamming
+// ADC reads 0-4095 (12-bit). Calibrated from actual pot readings.
+#define POT_CENTER    2160
+#define POT_MIN       1800    // Full left (calibrate)
+#define POT_MAX       2500    // Full right (calibrate)
+#define POS_TOLERANCE 40      // Stop motor when within this range of target
+#define STEER_MIN_PWM 150     // Minimum PWM to overcome static friction
+#define STEER_MAX_PWM 500     // Cap max PWM to avoid slamming
 
 static adc_oneshot_unit_handle_t adc_handle = NULL;
 static int32_t last_logged_pos = 0;
 
 static int read_pot(void) {
-    int val = 0;
-    adc_oneshot_read(adc_handle, POT_ADC_CHANNEL, &val);
-    return val;
+    // Average multiple samples to reduce motor noise
+    int32_t sum = 0;
+    const int samples = 16;
+    for (int i = 0; i < samples; i++) {
+        int val = 0;
+        adc_oneshot_read(adc_handle, POT_ADC_CHANNEL, &val);
+        sum += val;
+    }
+    return (int)(sum / samples);
 }
 
 void steering_init(void) {
@@ -101,9 +107,14 @@ void steering_init(void) {
 }
 
 void steering_set_position(int32_t x_axis) {
-    // Apply dead zone — target center
+    // Apply dead zone — hold position, don't actively drive
     if (x_axis > -STEER_DEAD_ZONE && x_axis < STEER_DEAD_ZONE) {
-        x_axis = 0;
+        // Stop motor — just hold wherever it is
+        gpio_set_level(STEER_BIN1_GPIO, 0);
+        gpio_set_level(STEER_BIN2_GPIO, 0);
+        ledc_set_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL, 0);
+        ledc_update_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL);
+        return;
     }
 
     // Map thumbstick (-512..511) to target pot value (POT_MIN..POT_MAX)
@@ -126,11 +137,11 @@ void steering_set_position(int32_t x_axis) {
 
     // Direction
     if (error > 0) {
-        // Turn right
+        // Need to increase pot value
         gpio_set_level(STEER_BIN1_GPIO, 1);
         gpio_set_level(STEER_BIN2_GPIO, 0);
     } else {
-        // Turn left
+        // Need to decrease pot value
         gpio_set_level(STEER_BIN1_GPIO, 0);
         gpio_set_level(STEER_BIN2_GPIO, 1);
     }
