@@ -28,7 +28,8 @@ This project replaces the standard RC car controller with an Xbox Controller con
 [TB6612FNG H-Bridge] (VM = 5V)
       |
       |--- Channel A (PWM/DIR) ---> Front + Rear DC Motors (propulsion, wired in parallel)
-      |--- Channel B (PWM/DIR) ---> Front Stepper Motor (steering left/right)
+      |
+      |--- GPIO (servo PWM) ---> Steering Servo (left/right)
       |
       |--- GPIO -------> Front LED (headlights)
 ```
@@ -44,7 +45,7 @@ This project replaces the standard RC car controller with an Xbox Controller con
 | TB6612FNG H-Bridge | Dual-channel motor driver; VM = 5V |
 | Front DC Motor | Propulsion — forward / backward (wired in parallel with rear) |
 | Rear DC Motor | Propulsion — forward / backward (wired in parallel with front) |
-| Front Stepper Motor | Steering — left / right |
+| Front Steering Servo | Steering — left / right (servo, direct PWM from ESP32) |
 | Front LED | Headlights — on / off |
 | USB Cable | Power + serial logging |
 
@@ -73,15 +74,15 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | MOT-04 | Motor speed shall be proportional to trigger deflection (0–100% PWM). |
 | MOT-05 | Releasing both triggers shall brake the motors (STBY or coast configurable). |
 
-### 4.3 Steering (Front Stepper Motor)
+### 4.3 Steering (Front Servo)
 
 | ID | Requirement |
 |---|---|
-| STR-01 | The left thumbstick X-axis shall control the front stepper motor. |
-| STR-02 | Deflecting left shall step the motor to the left steering position. |
-| STR-03 | Deflecting right shall step the motor to the right steering position. |
-| STR-04 | Returning the thumbstick to center shall return the wheels to the straight-ahead position. |
-| STR-05 | Steering shall have a configurable maximum step count to prevent mechanical over-travel. |
+| STR-01 | The left thumbstick X-axis shall control the front steering servo. |
+| STR-02 | Deflecting left shall move the servo to the left steering position. |
+| STR-03 | Deflecting right shall move the servo to the right steering position. |
+| STR-04 | Returning the thumbstick to center shall return the servo to the center position. |
+| STR-05 | Servo pulse range (1.0–2.0ms at 50Hz) shall be configurable to prevent mechanical over-travel. |
 
 ### 4.4 Headlights (Front LED)
 
@@ -126,10 +127,8 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | AIN1 | GPIO 25 | Drive motors direction A |
 | AIN2 | GPIO 33 | Drive motors direction B |
 | PWMA | GPIO 32 | Drive motors PWM (front + rear DC in parallel) |
-| BIN1 | GPIO 27 | Stepper motor direction A |
-| BIN2 | GPIO 14 | Stepper motor direction B |
-| PWMB | GPIO 12 | Stepper motor PWM |
 | STBY | GPIO 26 | H-Bridge standby (active HIGH = enabled) |
+| SERVO | GPIO 27 | Steering servo signal (50Hz PWM, direct from ESP32) |
 | VM | 5V supply | Motor power (measured 4.6–5V) |
 | LED | GPIO 13 | Front LED |
 
@@ -146,7 +145,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | `main.c` | App entry point; task initialization |
 | `ble_controller.c/.h` | Bluepad32 integration; BLE event handling |
 | `motor_control.c/.h` | TB6612FNG PWM/direction control for both motors |
-| `steering.c/.h` | Stepper motor abstraction; position tracking |
+| `steering.c/.h` | Servo PWM control; position mapping |
 | `led.c/.h` | Headlight GPIO control |
 | `ota.c/.h` | OTA update handler |
 | `wifi.c/.h` | Wi-Fi station connection |
@@ -204,7 +203,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 
 | # | Question | Answer |
 |---|---|---|
-| 1 | Is the front motor a true stepper (step/dir) or a DC motor used for steering? | Stepper motor for left/right steering. Two additional DC motors (front + rear) for propulsion. |
+| 1 | Is the front motor a true stepper (step/dir) or a DC motor used for steering? | It is a servo. Direct PWM from ESP32 GPIO (no H-Bridge needed). Two DC motors (front + rear) for propulsion. |
 | 2 | What is the supply voltage for the motors? | Measured 4.6–5V (within TB6612FNG range). |
 | 3 | Should OTA be triggered automatically or via a dedicated button press? | Basic web interface served by the ESP32 over Wi-Fi. |
 | 4 | Is Wi-Fi available in the RC car environment? | Yes. Wi-Fi OTA will be used. |

@@ -1,25 +1,36 @@
 // SPDX-License-Identifier: MIT
-// RC Xbox Controller — Steering Control (TB6612FNG Channel B)
+// RC Xbox Controller — Steering Control (Servo PWM)
+//
+// Servo expects 50Hz PWM:
+//   1.0ms pulse = full left
+//   1.5ms pulse = center
+//   2.0ms pulse = full right
 
 #include "steering.h"
 
-#include <driver/gpio.h>
 #include <driver/ledc.h>
 #include <esp_log.h>
 #include <stdlib.h>
 
 static const char* TAG = "steering";
 
-// TB6612FNG Channel B — Stepper motor (steering)
-#define STEER_BIN1_GPIO  GPIO_NUM_27
-#define STEER_BIN2_GPIO  GPIO_NUM_14
-#define STEER_PWMB_GPIO  GPIO_NUM_12
+// Servo signal GPIO (direct from ESP32, no H-Bridge)
+#define SERVO_GPIO  GPIO_NUM_27
 
-// LEDC config — use different channel/timer than drive motor
-#define STEER_PWM_CHANNEL   LEDC_CHANNEL_1
-#define STEER_PWM_TIMER     LEDC_TIMER_1
-#define STEER_PWM_FREQ_HZ   1000
-#define STEER_PWM_RESOLUTION LEDC_TIMER_10_BIT  // 0-1023
+// LEDC config
+#define SERVO_PWM_CHANNEL   LEDC_CHANNEL_1
+#define SERVO_PWM_TIMER     LEDC_TIMER_1
+#define SERVO_PWM_FREQ_HZ   50
+#define SERVO_PWM_RESOLUTION LEDC_TIMER_13_BIT  // 8192 steps per 20ms period
+
+// Servo pulse width in LEDC duty counts (at 13-bit, 50Hz)
+// 20ms period = 8192 counts
+// 1.0ms = 410 counts (full left)
+// 1.5ms = 614 counts (center)
+// 2.0ms = 819 counts (full right)
+#define SERVO_MIN_DUTY  410
+#define SERVO_MID_DUTY  614
+#define SERVO_MAX_DUTY  819
 
 // Dead zone: ignore thumbstick values near center (~15% of 512)
 #define STEER_DEAD_ZONE  80
@@ -27,79 +38,62 @@ static const char* TAG = "steering";
 static int32_t last_logged_pos = 0;
 
 void steering_init(void) {
-    // Configure direction GPIOs
-    gpio_config_t io_conf = {
-        .pin_bit_mask = (1ULL << STEER_BIN1_GPIO) | (1ULL << STEER_BIN2_GPIO),
-        .mode = GPIO_MODE_OUTPUT,
-        .pull_up_en = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE,
-    };
-    gpio_config(&io_conf);
-
-    // Configure LEDC PWM for steering speed
+    // Configure LEDC PWM for servo
     ledc_timer_config_t timer_conf = {
         .speed_mode = LEDC_HIGH_SPEED_MODE,
-        .timer_num = STEER_PWM_TIMER,
-        .duty_resolution = STEER_PWM_RESOLUTION,
-        .freq_hz = STEER_PWM_FREQ_HZ,
+        .timer_num = SERVO_PWM_TIMER,
+        .duty_resolution = SERVO_PWM_RESOLUTION,
+        .freq_hz = SERVO_PWM_FREQ_HZ,
         .clk_cfg = LEDC_AUTO_CLK,
     };
     ledc_timer_config(&timer_conf);
 
     ledc_channel_config_t channel_conf = {
-        .gpio_num = STEER_PWMB_GPIO,
+        .gpio_num = SERVO_GPIO,
         .speed_mode = LEDC_HIGH_SPEED_MODE,
-        .channel = STEER_PWM_CHANNEL,
-        .timer_sel = STEER_PWM_TIMER,
-        .duty = 0,
+        .channel = SERVO_PWM_CHANNEL,
+        .timer_sel = SERVO_PWM_TIMER,
+        .duty = SERVO_MID_DUTY,
         .hpoint = 0,
     };
     ledc_channel_config(&channel_conf);
 
-    ESP_LOGI(TAG, "Steering initialized (BIN1=%d, BIN2=%d, PWMB=%d)",
-             STEER_BIN1_GPIO, STEER_BIN2_GPIO, STEER_PWMB_GPIO);
+    // Start at center
+    ledc_set_duty(LEDC_HIGH_SPEED_MODE, SERVO_PWM_CHANNEL, SERVO_MID_DUTY);
+    ledc_update_duty(LEDC_HIGH_SPEED_MODE, SERVO_PWM_CHANNEL);
+
+    ESP_LOGI(TAG, "Servo steering initialized (GPIO=%d, center=%d)", SERVO_GPIO, SERVO_MID_DUTY);
 }
 
 void steering_set_position(int32_t x_axis) {
     uint32_t duty;
 
-    // Apply dead zone
+    // Apply dead zone — return to center
     if (x_axis > -STEER_DEAD_ZONE && x_axis < STEER_DEAD_ZONE) {
-        steering_stop();
-        return;
-    }
-
-    if (x_axis > 0) {
-        // Steer right: BIN1=HIGH, BIN2=LOW
-        gpio_set_level(STEER_BIN1_GPIO, 1);
-        gpio_set_level(STEER_BIN2_GPIO, 0);
-        duty = (uint32_t)x_axis;
+        duty = SERVO_MID_DUTY;
     } else {
-        // Steer left: BIN1=LOW, BIN2=HIGH
-        gpio_set_level(STEER_BIN1_GPIO, 0);
-        gpio_set_level(STEER_BIN2_GPIO, 1);
-        duty = (uint32_t)(-x_axis);
+        // Map -512..511 → SERVO_MIN_DUTY..SERVO_MAX_DUTY
+        // Center at 0 → SERVO_MID_DUTY
+        int32_t range = SERVO_MAX_DUTY - SERVO_MIN_DUTY;
+        duty = SERVO_MID_DUTY + (x_axis * range) / 1024;
+
+        // Clamp
+        if (duty < SERVO_MIN_DUTY) duty = SERVO_MIN_DUTY;
+        if (duty > SERVO_MAX_DUTY) duty = SERVO_MAX_DUTY;
     }
 
-    // Scale from 0-512 range to 0-1023 PWM range
-    duty = (duty * 1023) / 512;
-    if (duty > 1023) {
-        duty = 1023;
-    }
-
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL, duty);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL);
+    ledc_set_duty(LEDC_HIGH_SPEED_MODE, SERVO_PWM_CHANNEL, duty);
+    ledc_update_duty(LEDC_HIGH_SPEED_MODE, SERVO_PWM_CHANNEL);
 
     if (x_axis != last_logged_pos) {
-        ESP_LOGI(TAG, "pos=%ld duty=%lu dir=%s", (long)x_axis, (unsigned long)duty, x_axis > 0 ? "RIGHT" : "LEFT");
+        const char* dir = (x_axis > STEER_DEAD_ZONE) ? "RIGHT" :
+                          (x_axis < -STEER_DEAD_ZONE) ? "LEFT" : "CENTER";
+        ESP_LOGI(TAG, "pos=%ld duty=%lu dir=%s", (long)x_axis, (unsigned long)duty, dir);
         last_logged_pos = x_axis;
     }
 }
 
 void steering_stop(void) {
-    gpio_set_level(STEER_BIN1_GPIO, 0);
-    gpio_set_level(STEER_BIN2_GPIO, 0);
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL, 0);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, STEER_PWM_CHANNEL);
+    ledc_set_duty(LEDC_HIGH_SPEED_MODE, SERVO_PWM_CHANNEL, SERVO_MID_DUTY);
+    ledc_update_duty(LEDC_HIGH_SPEED_MODE, SERVO_PWM_CHANNEL);
 }
