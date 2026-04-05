@@ -42,7 +42,7 @@ This project replaces the standard RC car controller with an Xbox Controller con
 |---|---|
 | ESP32-WROOM | Main microcontroller; BLE host, motor control |
 | Xbox Controller | User input device; connects over BLE |
-| TB6612FNG H-Bridge | Dual-channel motor driver; VM = 7.4V |
+| TB6612FNG H-Bridge | Dual-channel motor driver; VM = 5V |
 | Front DC Motor | Propulsion — forward / backward (wired in parallel with rear) |
 | Rear DC Motor | Propulsion — forward / backward (wired in parallel with front) |
 | Front Steering Servo | Steering — DC motor + potentiometer feedback, driven via TB6612FNG Channel B |
@@ -133,7 +133,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | LED | GPIO 13 | IO13 (pin 16) | — | Front LED headlight |
 | VDD | 3.3V | VDD (pin 2) | VCC (pin 2) | Logic power |
 | GND | GND | GND (pin 1) | GND (pins 3,8,9) | Common ground |
-| VM | — | — | VM (pin 1) | Motor power: 7.4V Li-ion battery |
+| VM | — | — | VM (pin 1) | Motor power: 5V (regulated from battery) |
 
 ### TB6612FNG Motor Outputs
 
@@ -160,7 +160,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 |---|---|---|
 | 100nF ceramic cap | GPIO 34 ↔ GND | Required: filters motor EMI on ADC |
 | 220Ω resistor | GPIO 13 → LED → GND | Current limiting for headlight LED |
-| 7.4V Li-ion battery | VM + GND on TB6612FNG | 2S 18650, 1500mAh |
+| 7.4V Li-ion battery | VM + GND on TB6612FNG | 2S 18650, 1500mAh (regulated to 5V for VM) |
 
 ---
 
