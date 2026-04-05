@@ -103,8 +103,8 @@ static void my_platform_on_controller_data(uni_hid_device_t* d, uni_controller_t
     // Bluepad32: brake = LT (0-1023), throttle = RT (0-1023)
     int32_t drive_speed = 0;
     if (gp->brake > 0 && gp->throttle > 0) {
-        // Both pressed: net speed (LT forward - RT reverse)
-        drive_speed = gp->brake - gp->throttle;
+        // Both pressed: safety stop
+        drive_speed = 0;
     } else if (gp->brake > 0) {
         drive_speed = gp->brake;     // Forward
     } else if (gp->throttle > 0) {
