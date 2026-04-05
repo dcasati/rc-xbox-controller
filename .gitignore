@@ -11,3 +11,5 @@ hello_world/
 
 hardware/.history/
 hardware/*.lck
+hardware/*-backups/
+hardware/*.prl
