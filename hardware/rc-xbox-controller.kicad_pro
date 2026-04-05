@@ -1,0 +1,15 @@
+{
+  "board": {
+    "active_layer": 0,
+    "active_layer_preset": ""
+  },
+  "meta": {
+    "filename": "rc-xbox-controller.kicad_pro",
+    "version": 2
+  },
+  "schematic": {
+    "drawing": {
+      "default_line_thickness": 6.0
+    }
+  }
+}

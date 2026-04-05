@@ -42,7 +42,7 @@ This project replaces the standard RC car controller with an Xbox Controller con
 |---|---|
 | ESP32-WROOM | Main microcontroller; BLE host, motor control |
 | Xbox Controller | User input device; connects over BLE |
-| TB6612FNG H-Bridge | Dual-channel motor driver; VM = 5V |
+| TB6612FNG H-Bridge | Dual-channel motor driver; VM = 7.4V |
 | Front DC Motor | Propulsion — forward / backward (wired in parallel with rear) |
 | Rear DC Motor | Propulsion — forward / backward (wired in parallel with front) |
 | Front Steering Servo | Steering — DC motor + potentiometer feedback, driven via TB6612FNG Channel B |
@@ -118,24 +118,49 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 
 ---
 
-## 6. TB6612FNG Pin Mapping (Proposed)
+## 6. Pin Mapping (Verified)
 
-| TB6612FNG Pin | ESP32 GPIO | Function |
-|---|---|---|
-| TB6612FNG Pin | ESP32 GPIO | Function |
-|---|---|---|
-| AIN1 | GPIO 25 | Drive motors direction A |
-| AIN2 | GPIO 33 | Drive motors direction B |
-| PWMA | GPIO 32 | Drive motors PWM (front + rear DC in parallel) |
-| STBY | GPIO 26 | H-Bridge standby (active HIGH = enabled) |
-| BIN1 | GPIO 27 | Steering motor direction A |
-| BIN2 | GPIO 14 | Steering motor direction B |
-| PWMB | GPIO 12 | Steering motor PWM |
-| POT | GPIO 34 | Steering potentiometer (ADC input) |
-| VM | 5V supply | Motor power (measured 4.6–5V) |
-| LED | GPIO 13 | Front LED |
+| Signal | ESP32 Pin | ESP32-WROOM-32 Module Pin | TB6612FNG Pin | Function |
+|---|---|---|---|---|
+| AIN1 | GPIO 25 | IO25 (pin 10) | pin 14 | Drive motors direction A |
+| AIN2 | GPIO 33 | IO33 (pin 9) | pin 15 | Drive motors direction B |
+| PWMA | GPIO 32 | IO32 (pin 8) | pin 16 | Drive motors PWM |
+| STBY | GPIO 26 | IO26 (pin 11) | — | H-Bridge standby (HIGH = enabled) |
+| BIN1 | GPIO 27 | IO27 (pin 12) | pin 12 | Steering motor direction A |
+| BIN2 | GPIO 14 | IO14 (pin 13) | pin 11 | Steering motor direction B |
+| PWMB | GPIO 12 | IO12 (pin 14) | pin 10 | Steering motor PWM |
+| POT | GPIO 34 | IO34 (pin 6) | — | Steering potentiometer wiper (ADC input) |
+| LED | GPIO 13 | IO13 (pin 16) | — | Front LED headlight |
+| VDD | 3.3V | VDD (pin 2) | VCC (pin 2) | Logic power |
+| GND | GND | GND (pin 1) | GND (pins 3,8,9) | Common ground |
+| VM | — | — | VM (pin 1) | Motor power: 7.4V Li-ion battery |
 
-> GPIO assignments are preliminary and subject to revision based on PCB layout and signal conflicts.
+### TB6612FNG Motor Outputs
+
+| TB6612FNG Pin | Connected to | Notes |
+|---|---|---|
+| AO1 (pin 4) | Drive motor wire 1 | Front + rear DC motors wired in parallel |
+| AO2 (pin 5) | Drive motor wire 2 | Swap AO1/AO2 if direction is reversed |
+| BO1 (pin 7) | Steering servo RED wire | Motor + |
+| BO2 (pin 6) | Steering servo BLACK wire | Motor − |
+
+### 5-Wire Steering Servo
+
+| Wire Color | Connect to | Function |
+|---|---|---|
+| Red | TB6612FNG BO1 (pin 7) | Motor + |
+| Black | TB6612FNG BO2 (pin 6) | Motor − |
+| White | ESP32 3.3V | Potentiometer VCC |
+| Yellow | ESP32 GPIO 34 | Potentiometer wiper (ADC) |
+| Brown | ESP32 GND | Potentiometer GND |
+
+### Additional Components
+
+| Component | Connection | Notes |
+|---|---|---|
+| 100nF ceramic cap | GPIO 34 ↔ GND | Required: filters motor EMI on ADC |
+| 220Ω resistor | GPIO 13 → LED → GND | Current limiting for headlight LED |
+| 7.4V Li-ion battery | VM + GND on TB6612FNG | 2S 18650, 1500mAh |
 
 ---
 
