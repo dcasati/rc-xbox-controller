@@ -8,3 +8,6 @@ sdkconfig.old
 hello_world/
 .DS_Store
 ._*
+
+hardware/.history/
+hardware/*.lck
