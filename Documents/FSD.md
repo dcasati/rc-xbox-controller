@@ -128,9 +128,9 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | AIN2 | GPIO 33 | Drive motors direction B |
 | PWMA | GPIO 32 | Drive motors PWM (front + rear DC in parallel) |
 | STBY | GPIO 26 | H-Bridge standby (active HIGH = enabled) |
-| SERVO | GPIO 27 | Steering servo signal (50Hz PWM, direct from ESP32) |
+| SERVO | GPIO 13 | Steering servo signal (50Hz PWM, direct from ESP32) |
 | VM | 5V supply | Motor power (measured 4.6–5V) |
-| LED | GPIO 13 | Front LED |
+| LED | GPIO 4 | Front LED |
 
 > GPIO assignments are preliminary and subject to revision based on PCB layout and signal conflicts.
 

@@ -8,7 +8,7 @@
 
 static const char* TAG = "led";
 
-#define LED_GPIO  GPIO_NUM_13
+#define LED_GPIO  GPIO_NUM_4
 
 static bool led_state = false;
 

@@ -15,7 +15,7 @@
 static const char* TAG = "steering";
 
 // Servo signal GPIO (direct from ESP32, no H-Bridge)
-#define SERVO_GPIO  GPIO_NUM_27
+#define SERVO_GPIO  GPIO_NUM_13
 
 // LEDC config
 #define SERVO_PWM_CHANNEL   LEDC_CHANNEL_1
