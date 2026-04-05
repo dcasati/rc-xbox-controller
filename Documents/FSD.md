@@ -133,7 +133,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | PWMB | GPIO 12 | Steering motor PWM |
 | POT | GPIO 34 | Steering potentiometer (ADC input) |
 | VM | 5V supply | Motor power (measured 4.6–5V) |
-| LED | GPIO 4 | Front LED |
+| LED | GPIO 13 | Front LED |
 
 > GPIO assignments are preliminary and subject to revision based on PCB layout and signal conflicts.
 
