@@ -6,7 +6,7 @@ set(srcs
     "led.c"
 )
 
-set(requires "bluepad32" "btstack" "driver")
+set(requires "bluepad32" "btstack" "driver" "esp_adc")
 
 idf_component_register(SRCS "${srcs}"
                     INCLUDE_DIRS "."

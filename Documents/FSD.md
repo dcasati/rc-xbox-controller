@@ -29,7 +29,7 @@ This project replaces the standard RC car controller with an Xbox Controller con
       |
       |--- Channel A (PWM/DIR) ---> Front + Rear DC Motors (propulsion, wired in parallel)
       |
-      |--- GPIO (servo PWM) ---> Steering Servo (left/right)
+      |--- Channel B (PWM/DIR) ---> Steering Motor (DC + potentiometer feedback)
       |
       |--- GPIO -------> Front LED (headlights)
 ```
@@ -45,7 +45,7 @@ This project replaces the standard RC car controller with an Xbox Controller con
 | TB6612FNG H-Bridge | Dual-channel motor driver; VM = 5V |
 | Front DC Motor | Propulsion — forward / backward (wired in parallel with rear) |
 | Rear DC Motor | Propulsion — forward / backward (wired in parallel with front) |
-| Front Steering Servo | Steering — left / right (servo, direct PWM from ESP32) |
+| Front Steering Servo | Steering — DC motor + potentiometer feedback, driven via TB6612FNG Channel B |
 | Front LED | Headlights — on / off |
 | USB Cable | Power + serial logging |
 
@@ -128,7 +128,10 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | AIN2 | GPIO 33 | Drive motors direction B |
 | PWMA | GPIO 32 | Drive motors PWM (front + rear DC in parallel) |
 | STBY | GPIO 26 | H-Bridge standby (active HIGH = enabled) |
-| SERVO | GPIO 13 | Steering servo signal (50Hz PWM, direct from ESP32) |
+| BIN1 | GPIO 27 | Steering motor direction A |
+| BIN2 | GPIO 14 | Steering motor direction B |
+| PWMB | GPIO 12 | Steering motor PWM |
+| POT | GPIO 34 | Steering potentiometer (ADC input) |
 | VM | 5V supply | Motor power (measured 4.6–5V) |
 | LED | GPIO 4 | Front LED |
 
@@ -145,7 +148,7 @@ The front and rear DC motors are wired in parallel on TB6612FNG Channel A. They 
 | `main.c` | App entry point; task initialization |
 | `ble_controller.c/.h` | Bluepad32 integration; BLE event handling |
 | `motor_control.c/.h` | TB6612FNG PWM/direction control for both motors |
-| `steering.c/.h` | Servo PWM control; position mapping |
+| `steering.c/.h` | DC motor + potentiometer closed-loop position control |
 | `led.c/.h` | Headlight GPIO control |
 | `ota.c/.h` | OTA update handler |
 | `wifi.c/.h` | Wi-Fi station connection |
