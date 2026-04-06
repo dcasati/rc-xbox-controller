@@ -9,6 +9,7 @@
 
 #include <string.h>
 
+#include <esp_log.h>
 #include <uni.h>
 
 #include "led.h"
@@ -18,6 +19,8 @@
 typedef struct my_platform_instance_s {
     uni_gamepad_seat_t gamepad_seat;
 } my_platform_instance_t;
+
+static const char* TAG = "ble";
 
 static my_platform_instance_t* get_my_platform_instance(uni_hid_device_t* d);
 
@@ -29,7 +32,7 @@ static void my_platform_init(int argc, const char** argv) {
     ARG_UNUSED(argc);
     ARG_UNUSED(argv);
 
-    logi("rc-xbox-controller: init()\n");
+    ESP_LOGI(TAG, "Platform init");
 
     // Initialize hardware
     motor_control_init();
@@ -38,7 +41,7 @@ static void my_platform_init(int argc, const char** argv) {
 }
 
 static void my_platform_on_init_complete(void) {
-    logi("rc-xbox-controller: on_init_complete()\n");
+    ESP_LOGI(TAG, "BLE init complete — scanning for controllers");
 
     // Start scanning for controllers
     uni_bt_start_scanning_and_autoconnect_unsafe();
@@ -49,20 +52,21 @@ static void my_platform_on_init_complete(void) {
 }
 
 static uni_error_t my_platform_on_device_discovered(bd_addr_t addr, const char* name, uint16_t cod, uint8_t rssi) {
+    ESP_LOGI(TAG, "Device discovered: %s (COD=0x%04x, RSSI=%d)", name ? name : "unknown", cod, rssi);
     // Accept all gamepads, filter out keyboards
     if (((cod & UNI_BT_COD_MINOR_MASK) & UNI_BT_COD_MINOR_KEYBOARD) == UNI_BT_COD_MINOR_KEYBOARD) {
-        logi("Ignoring keyboard\n");
+        ESP_LOGW(TAG, "Ignoring keyboard device");
         return UNI_ERROR_IGNORE_DEVICE;
     }
     return UNI_ERROR_SUCCESS;
 }
 
 static void my_platform_on_device_connected(uni_hid_device_t* d) {
-    logi("rc-xbox-controller: device connected: %p\n", d);
+    ESP_LOGI(TAG, "Controller connected: %p", d);
 }
 
 static void my_platform_on_device_disconnected(uni_hid_device_t* d) {
-    logi("rc-xbox-controller: device disconnected: %p\n", d);
+    ESP_LOGW(TAG, "Controller disconnected: %p — stopping all outputs", d);
 
     // Safety: stop everything on disconnect
     motor_stop();
@@ -71,7 +75,7 @@ static void my_platform_on_device_disconnected(uni_hid_device_t* d) {
 }
 
 static uni_error_t my_platform_on_device_ready(uni_hid_device_t* d) {
-    logi("rc-xbox-controller: device ready: %p\n", d);
+    ESP_LOGI(TAG, "Controller ready: %p", d);
     my_platform_instance_t* ins = get_my_platform_instance(d);
     ins->gamepad_seat = GAMEPAD_SEAT_A;
 
@@ -131,10 +135,10 @@ static const uni_property_t* my_platform_get_property(uni_property_idx_t idx) {
 static void my_platform_on_oob_event(uni_platform_oob_event_t event, void* data) {
     switch (event) {
         case UNI_PLATFORM_OOB_GAMEPAD_SYSTEM_BUTTON:
-            logi("rc-xbox-controller: system button pressed\n");
+            ESP_LOGI(TAG, "System button pressed");
             break;
         case UNI_PLATFORM_OOB_BLUETOOTH_ENABLED:
-            logi("rc-xbox-controller: Bluetooth enabled: %d\n", (bool)(data));
+            ESP_LOGI(TAG, "Bluetooth enabled: %d", (bool)(data));
             break;
         default:
             break;

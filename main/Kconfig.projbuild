@@ -1,0 +1,15 @@
+menu "RC Xbox Controller Config"
+
+    config RC_WIFI_SSID
+        string "Wi-Fi SSID"
+        default "myssid"
+        help
+            SSID of the Wi-Fi network to connect to for OTA updates.
+
+    config RC_WIFI_PASSWORD
+        string "Wi-Fi Password"
+        default "mypassword"
+        help
+            Password of the Wi-Fi network to connect to for OTA updates.
+
+endmenu

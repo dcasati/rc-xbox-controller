@@ -104,6 +104,55 @@ idf.py build
 idf.py -p /dev/ttyUSB0 flash monitor
 ```
 
+### Wi-Fi Configuration
+
+Wi-Fi credentials are needed for OTA firmware updates. Since `sdkconfig` is gitignored, each developer must configure credentials locally.
+
+**Option 1 — Interactive menu (recommended):**
+
+```bash
+get_idf
+idf.py menuconfig
+```
+
+Navigate to **RC Xbox Controller Config** and set:
+- **Wi-Fi SSID** — your network name
+- **Wi-Fi Password** — your network password
+
+Save and exit. Then rebuild with `idf.py build`.
+
+**Option 2 — Command line (no menu):**
+
+```bash
+idf.py menuconfig --set "CONFIG_RC_WIFI_SSID=YourNetworkName" --set "CONFIG_RC_WIFI_PASSWORD=YourPassword"
+idf.py build
+```
+
+**Option 3 — Edit `sdkconfig.defaults` (shared defaults):**
+
+Add your credentials to `sdkconfig.defaults` if you want them as the default for new builds:
+
+```
+CONFIG_RC_WIFI_SSID="YourNetworkName"
+CONFIG_RC_WIFI_PASSWORD="YourPassword"
+```
+
+Then do a clean build: `idf.py fullclean && idf.py build`
+
+> **Note:** Do not commit real credentials. The defaults in `Kconfig.projbuild` are placeholder values (`myssid` / `mypassword`).
+
+### OTA Firmware Update
+
+Once connected to Wi-Fi, the ESP32 starts an HTTP server on port 80. To update firmware over-the-air:
+
+1. Build the project: `idf.py build`
+2. Find the ESP32's IP address in the serial monitor output (logged on boot)
+3. Open `http://<ESP32_IP>/` in a browser
+4. Select the `.bin` file from `build/rc_xbox_controller.bin`
+5. Click **Upload & Flash** — the device reboots automatically
+
+![OTA Web Interface](assets/ota-web-interface.png)
+
 ## Usage
 
 1. **Power on** the ESP32 and the RC car
@@ -126,11 +175,11 @@ idf.py -p /dev/ttyUSB0 flash monitor
 - [x] LED headlight toggle (Y button)
 - [x] Disconnect safety (motors stop on BLE disconnect)
 
-### 🚧 Phase 2 — Planned
-- [ ] Wi-Fi connectivity
-- [ ] OTA firmware updates via web interface
-- [ ] Web-based parameter tuning
-- [ ] Advanced logging and diagnostics
+### ✅ Phase 2 — Complete
+- [x] Wi-Fi station connectivity
+- [x] OTA firmware updates via web interface
+- [x] Structured logging with ESP_LOG per-module tags
+- [ ] Tuning & polish (Task 2.5)
 
 ## Development Notes
 

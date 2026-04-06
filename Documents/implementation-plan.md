@@ -35,45 +35,45 @@ rc-xbox-controller/
 ## Phase 1 — Motor Control & BLE Driving
 
 ### Task 1.1: Project Scaffolding
-- [ ] Create ESP-IDF project structure (`CMakeLists.txt`, `main/`)
-- [ ] Add Bluepad32 as a component (git submodule under `components/`)
-- [ ] Configure `sdkconfig.defaults` for ESP32-WROOM (BLE enabled, flash 4MB)
-- [ ] Set target to `esp32`, verify blank project builds
+- [x] Create ESP-IDF project structure (`CMakeLists.txt`, `main/`)
+- [x] Add Bluepad32 as a component (git submodule under `components/`)
+- [x] Configure `sdkconfig.defaults` for ESP32-WROOM (BLE enabled, flash 4MB)
+- [x] Set target to `esp32`, verify blank project builds
 - **Depends on:** nothing
 
 ### Task 1.2: BLE Controller Integration
-- [ ] Implement `ble_controller.c/.h` — init Bluepad32, register callbacks
-- [ ] Handle `onConnectedGamepad` / `onDisconnectedGamepad` events
-- [ ] Parse Xbox Controller inputs: LT, RT, left thumbstick X-axis, Y button
-- [ ] Log raw input values over serial for validation
+- [x] Implement `ble_controller.c/.h` — init Bluepad32, register callbacks
+- [x] Handle `onConnectedGamepad` / `onDisconnectedGamepad` events
+- [x] Parse Xbox Controller inputs: LT, RT, left thumbstick X-axis, Y button
+- [x] Log raw input values over serial for validation
 - **Depends on:** 1.1
 - **Validates:** BLE-01, BLE-02, BLE-03
 
 ### Task 1.3: Drive Motor Control (TB6612FNG Channel A)
-- [ ] Implement `motor_control.c/.h`
-- [ ] Configure LEDC PWM on GPIO 27 (PWMA), GPIOs 25/26 (AIN1/AIN2)
-- [ ] Configure GPIO 12 (STBY) — pull HIGH on init
-- [ ] `motor_set_speed(int16_t speed)` — positive = forward, negative = reverse, 0 = brake
-- [ ] Map LT (0–1023) → forward PWM, RT (0–1023) → reverse PWM
-- [ ] Add dead-zone threshold (~5% of trigger range) to avoid motor hum at rest
+- [x] Implement `motor_control.c/.h`
+- [x] Configure LEDC PWM on GPIO 27 (PWMA), GPIOs 25/26 (AIN1/AIN2)
+- [x] Configure GPIO 12 (STBY) — pull HIGH on init
+- [x] `motor_set_speed(int16_t speed)` — positive = forward, negative = reverse, 0 = brake
+- [x] Map LT (0–1023) → forward PWM, RT (0–1023) → reverse PWM
+- [x] Add dead-zone threshold (~5% of trigger range) to avoid motor hum at rest
 - **Depends on:** 1.1
 - **Validates:** MOT-01 through MOT-05
 
 ### Task 1.4: Steering Control (TB6612FNG Channel B)
-- [ ] Implement `steering.c/.h`
-- [ ] Configure LEDC PWM on GPIO 14 (PWMB), GPIOs 32/33 (BIN1/BIN2)
-- [ ] `steering_set_position(int16_t x_axis)` — map thumbstick X to stepper direction/speed
-- [ ] Add configurable max step count constant to prevent mechanical over-travel
-- [ ] Center position (thumbstick = 0) → stop stepper
+- [x] Implement `steering.c/.h`
+- [x] Configure LEDC PWM on GPIO 14 (PWMB), GPIOs 32/33 (BIN1/BIN2)
+- [x] `steering_set_position(int16_t x_axis)` — map thumbstick X to stepper direction/speed
+- [x] Add configurable max step count constant to prevent mechanical over-travel
+- [x] Center position (thumbstick = 0) → stop stepper
 - **Depends on:** 1.1
 - **Validates:** STR-01 through STR-05
 
 ### Task 1.5: End-to-End Integration
-- [ ] Wire BLE callbacks → motor + steering functions in `main.c`
-- [ ] Create `ble_task` (FreeRTOS, priority high) — poll Bluepad32
-- [ ] Create `motor_task` (FreeRTOS, priority high) — consume input queue, apply PWM
-- [ ] Add BLE disconnect safety: stop motors + stepper on disconnect
-- [ ] Flash to ESP32, test with Xbox Controller + motors on bench
+- [x] Wire BLE callbacks → motor + steering functions in `main.c`
+- [x] Create `ble_task` (FreeRTOS, priority high) — poll Bluepad32
+- [x] Create `motor_task` (FreeRTOS, priority high) — consume input queue, apply PWM
+- [x] Add BLE disconnect safety: stop motors + stepper on disconnect
+- [x] Flash to ESP32, test with Xbox Controller + motors on bench
 - **Depends on:** 1.2, 1.3, 1.4
 - **Validates:** BLE-04, full Phase 1
 
@@ -85,35 +85,35 @@ rc-xbox-controller/
 ## Phase 2 — Headlights & Enhancements
 
 ### Task 2.1: Headlight LED Control
-- [ ] Implement `led.c/.h`
-- [ ] Configure GPIO 4 as output
-- [ ] `led_toggle()`, `led_set(bool on)`, `led_off()`
-- [ ] Wire Y button press (with debounce) → `led_toggle()`
-- [ ] Call `led_off()` on BLE disconnect
+- [x] Implement `led.c/.h`
+- [x] Configure GPIO 13 as output
+- [x] `led_toggle()`, `led_set(bool on)`, `led_off()`
+- [x] Wire Y button press (with debounce) → `led_toggle()`
+- [x] Call `led_off()` on BLE disconnect
 - **Depends on:** Phase 1
 - **Validates:** LED-01, LED-02, LED-03
 
 ### Task 2.2: Wi-Fi Station Connection
-- [ ] Implement `wifi.c/.h`
-- [ ] Add `Kconfig.projbuild` for SSID/password configuration
-- [ ] Connect to Wi-Fi on boot using ESP-IDF `esp_wifi` API
-- [ ] Log IP address on successful connection
+- [x] Implement `wifi.c/.h`
+- [x] Add `Kconfig.projbuild` for SSID/password configuration
+- [x] Connect to Wi-Fi on boot using ESP-IDF `esp_wifi` API
+- [x] Log IP address on successful connection
 - **Depends on:** Phase 1
 - **Validates:** OTA-03
 
 ### Task 2.3: OTA Web Interface
-- [ ] Implement `webserver.c/.h` — start `httpd_server` on port 80
-- [ ] Serve HTML upload form at `GET /`
-- [ ] Handle firmware binary upload at `POST /ota`
-- [ ] Implement `ota.c/.h` — write to OTA partition, validate, reboot
-- [ ] Create OTA partition table (`partitions.csv`: factory + ota_0 + ota_1)
+- [x] Implement `webserver.c/.h` — start `httpd_server` on port 80
+- [x] Serve HTML upload form at `GET /`
+- [x] Handle firmware binary upload at `POST /ota`
+- [x] Implement `ota.c/.h` — write to OTA partition, validate, reboot
+- [x] Create OTA partition table (`partitions.csv`: factory + ota_0 + ota_1)
 - **Depends on:** 2.2
 - **Validates:** OTA-01, OTA-02
 
 ### Task 2.4: Logging
-- [ ] Implement structured serial logging for all subsystems
-- [ ] Log: BLE state, trigger values, PWM duty, thumbstick X, LED state
-- [ ] Use ESP-IDF `ESP_LOG` macros with per-module tags
+- [x] Implement structured serial logging for all subsystems
+- [x] Log: BLE state, trigger values, PWM duty, thumbstick X, LED state
+- [x] Use ESP-IDF `ESP_LOG` macros with per-module tags
 - **Depends on:** Phase 1
 - **Validates:** OTA-04, OTA-05
 
