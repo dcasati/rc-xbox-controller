@@ -135,13 +135,13 @@ rc-xbox-controller/
 | GPIO | Function | Direction |
 |------|----------|-----------|
 | 4    | Front LED | Output |
-| 12   | TB6612FNG STBY | Output |
-| 14   | PWMB (stepper) | PWM Output |
+| 12   | PWMB (steering PWM) | PWM Output |
+| 14   | BIN2 (steer dir B) | Output |
 | 25   | AIN1 (drive dir A) | Output |
-| 26   | AIN2 (drive dir B) | Output |
-| 27   | PWMA (drive PWM) | PWM Output |
-| 32   | BIN1 (steer dir A) | Output |
-| 33   | BIN2 (steer dir B) | Output |
+| 26   | TB6612FNG STBY | Output |
+| 27   | BIN1 (steer dir A) | Output |
+| 32   | PWMA (drive PWM) | PWM Output |
+| 33   | AIN2 (drive dir B) | Output |
 
 ---
 

@@ -2662,6 +2662,121 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "power:PWR_FLAG"
+			(power global)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "#FLG"
+				(at 0 1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "PWR_FLAG"
+				(at 0 3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Special symbol for telling ERC where power comes from"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "flag power"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_0"
+				(pin power_out line
+					(at 0 0 90)
+					(length 0)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 1.27) (xy -1.016 1.905) (xy 0 2.54) (xy 1.016 1.905) (xy 0 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(rectangle
 		(start 152.4 88.9)
@@ -2711,7 +2826,7 @@
 	)
 	(text "GPIO 26  --->  STBY              H-Bridge Enable (HIGH=ON)"
 		(exclude_from_sim no)
-		(at 64.77 106.058 0)
+		(at 60.96 106.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2732,7 +2847,7 @@
 	)
 	(text "ESP32 powered via USB (separate from motor battery)"
 		(exclude_from_sim no)
-		(at 63.754 178.91 0)
+		(at 59.944 179.292 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2742,7 +2857,7 @@
 	)
 	(text "Xbox Controller connects via BLE (Bluepad32)"
 		(exclude_from_sim no)
-		(at 63.754 193.91 0)
+		(at 59.944 194.292 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2762,7 +2877,7 @@
 	)
 	(text "GPIO 25  --->  AIN1 (pin 14)     Drive Motor Dir A"
 		(exclude_from_sim no)
-		(at 64.77 101.058 0)
+		(at 60.96 101.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2803,7 +2918,7 @@
 	)
 	(text "GPIO 12  --->  PWMB (pin 10)     Steering Motor PWM"
 		(exclude_from_sim no)
-		(at 64.77 121.058 0)
+		(at 60.96 121.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2864,7 +2979,7 @@
 	)
 	(text "Battery GND (Black)   ---> TB6612 GND (pins 3,8,9)"
 		(exclude_from_sim no)
-		(at 63.754 173.91 0)
+		(at 59.944 174.292 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2905,7 +3020,7 @@
 	)
 	(text "GND      --->  TB6612 GND, Pot GND (Brown wire), Cap"
 		(exclude_from_sim no)
-		(at 64.77 141.058 0)
+		(at 60.96 141.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2915,7 +3030,7 @@
 	)
 	(text "ESP32-WROOM GPIO Assignments"
 		(exclude_from_sim no)
-		(at 64.77 83.058 0)
+		(at 60.96 83.44 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -2926,7 +3041,7 @@
 	)
 	(text "GPIO 27  --->  BIN1 (pin 12)     Steering Motor Dir A"
 		(exclude_from_sim no)
-		(at 64.77 111.058 0)
+		(at 60.96 111.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2936,7 +3051,7 @@
 	)
 	(text "GPIO 13  --->  LED + 220ohm       Headlight"
 		(exclude_from_sim no)
-		(at 64.77 131.058 0)
+		(at 60.96 131.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2946,7 +3061,7 @@
 	)
 	(text "Power"
 		(exclude_from_sim no)
-		(at 63.754 155.91 0)
+		(at 59.944 156.292 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -2957,7 +3072,7 @@
 	)
 	(text "Battery +7.4V (Red)   ---> TB6612 VM (pin 1)"
 		(exclude_from_sim no)
-		(at 63.754 168.91 0)
+		(at 59.944 169.292 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2977,7 +3092,7 @@
 	)
 	(text "3.3V     --->  TB6612 VCC, Pot VCC (White wire)"
 		(exclude_from_sim no)
-		(at 64.77 136.058 0)
+		(at 60.96 136.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -2997,7 +3112,7 @@
 	)
 	(text "GPIO 33  --->  AIN2 (pin 15)     Drive Motor Dir B"
 		(exclude_from_sim no)
-		(at 64.77 96.058 0)
+		(at 60.96 96.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -3007,7 +3122,7 @@
 	)
 	(text "Battery: Li-ion 18650 2S  7.4V  1500mAh"
 		(exclude_from_sim no)
-		(at 63.754 163.91 0)
+		(at 59.944 164.292 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -3017,7 +3132,7 @@
 	)
 	(text "LT = Forward, RT = Reverse, Left Stick = Steer, Y = Headlights"
 		(exclude_from_sim no)
-		(at 63.754 198.91 0)
+		(at 59.944 199.292 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -3027,7 +3142,7 @@
 	)
 	(text "GPIO 32  --->  PWMA (pin 16)     Drive Motor PWM"
 		(exclude_from_sim no)
-		(at 64.77 91.058 0)
+		(at 60.96 91.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -3037,7 +3152,7 @@
 	)
 	(text "GPIO 34  <---  Pot Wiper          Steering Position (ADC)"
 		(exclude_from_sim no)
-		(at 64.77 126.058 0)
+		(at 60.96 126.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -3047,7 +3162,7 @@
 	)
 	(text "GPIO 14  --->  BIN2 (pin 11)     Steering Motor Dir B"
 		(exclude_from_sim no)
-		(at 64.77 116.058 0)
+		(at 60.96 116.44 0)
 		(effects
 			(font
 				(size 1.5 1.5)
@@ -3066,10 +3181,22 @@
 		(uuid "f3b607d5-b1d2-4514-8bb6-2d3cbc02aefc")
 	)
 	(junction
+		(at 166.37 110.49)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2c444930-4ffd-4166-9594-e6a537120d3e")
+	)
+	(junction
 		(at 172.72 111.76)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2ce92498-22f1-4b70-85a5-5909f50b8f74")
+	)
+	(junction
+		(at 172.72 182.88)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6e16a18c-3943-42b2-87e9-f94fe7c04b29")
 	)
 	(junction
 		(at 262.89 172.72)
@@ -3082,6 +3209,12 @@
 		(diameter 0)
 		(color 0 0 0 1)
 		(uuid "ce35fe75-d0df-4eda-bfe3-2f6b04041f10")
+	)
+	(junction
+		(at 234.95 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e25e0ce0-d6a7-4b9c-8b6c-69937f5356e1")
 	)
 	(no_connect
 		(at 157.48 160.02)
@@ -3252,6 +3385,16 @@
 	)
 	(wire
 		(pts
+			(xy 234.95 113.03) (xy 240.03 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1d7e5732-3eba-461e-97b9-b17bc67b9110")
+	)
+	(wire
+		(pts
 			(xy 198.12 99.06) (xy 198.12 134.62)
 		)
 		(stroke
@@ -3384,6 +3527,17 @@
 		)
 		(uuid "7cded997-d6f4-4771-bcce-c3e26c917dd7")
 	)
+	(wire
+		(pts
+			(xy 166.37 110.49) (xy 172.72 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color 255 0 0 1)
+		)
+		(uuid "823183ec-a368-4e9e-acd1-f260f3279ece")
+	)
 	(polyline
 		(pts
 			(xy 278.13 195.58) (xy 292.1 213.36)
@@ -3512,7 +3666,7 @@
 	)
 	(polyline
 		(pts
-			(xy 101.6 135.89) (xy 171.45 142.24)
+			(xy 97.79 136.272) (xy 167.64 142.622)
 		)
 		(stroke
 			(width 0)
@@ -3554,6 +3708,16 @@
 	)
 	(wire
 		(pts
+			(xy 166.37 182.88) (xy 172.72 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d197c8bc-e8d6-4880-be26-7145616c79f7")
+	)
+	(wire
+		(pts
 			(xy 189.23 170.18) (xy 187.96 170.18)
 		)
 		(stroke
@@ -3584,7 +3748,7 @@
 	)
 	(wire
 		(pts
-			(xy 154.94 110.49) (xy 172.72 110.49)
+			(xy 154.94 110.49) (xy 166.37 110.49)
 		)
 		(stroke
 			(width 0)
@@ -3675,7 +3839,7 @@
 		)
 		(uuid "24e1b2f1-dae1-46bc-a90d-2a3c78e8727c")
 	)
-	(label "IO27"
+	(label "BIN1"
 		(at 220.98 146.05 0)
 		(effects
 			(font
@@ -3695,7 +3859,7 @@
 		)
 		(uuid "3d215ebc-48ca-461f-957e-d5ef9282e7e6")
 	)
-	(label "IO25"
+	(label "AIN1"
 		(at 220.98 140.97 0)
 		(effects
 			(font
@@ -3725,7 +3889,7 @@
 		)
 		(uuid "44e4c4fd-0a82-4846-a871-98f012ca2168")
 	)
-	(label "IO12"
+	(label "PWMB"
 		(at 220.98 135.89 0)
 		(effects
 			(font
@@ -3745,7 +3909,7 @@
 		)
 		(uuid "5aa0aeca-2a83-47de-9836-4918005ede4f")
 	)
-	(label "IO32"
+	(label "PWMA"
 		(at 220.98 133.35 0)
 		(effects
 			(font
@@ -3755,7 +3919,7 @@
 		)
 		(uuid "5d1453e4-3694-4fe0-9e25-6babfee48b3f")
 	)
-	(label "IO33"
+	(label "AIN2"
 		(at 220.98 143.51 0)
 		(effects
 			(font
@@ -3765,7 +3929,7 @@
 		)
 		(uuid "62e6ce5d-8b65-43e5-9015-b4c5d144bdab")
 	)
-	(label "IO26"
+	(label "STBY"
 		(at 220.98 128.27 0)
 		(effects
 			(font
@@ -3805,7 +3969,7 @@
 		)
 		(uuid "bd5c0a0b-9dd8-4efe-b2ca-711a75a9d5eb")
 	)
-	(label "IO14"
+	(label "BIN2"
 		(at 220.98 148.59 0)
 		(effects
 			(font
@@ -4847,6 +5011,161 @@
 		)
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 240.03 113.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8bcc73cf-8493-4d4d-9cf1-28754d1b3434")
+		(property "Reference" "#FLG03"
+			(at 240.03 111.125 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 244.856 107.696 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 240.03 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 240.03 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 240.03 113.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "112c2a35-725f-40d9-add2-67972a9410e1")
+		)
+		(instances
+			(project "rc-xbox-controller"
+				(path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+					(reference "#FLG03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 166.37 182.88 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "9c3ed7b5-2cbe-46e9-871a-e3eccfaf6d9d")
+		(property "Reference" "#FLG02"
+			(at 166.37 180.975 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 166.37 177.8 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 166.37 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 166.37 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 166.37 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "949a077a-cfa3-438d-96e9-5f0657e79d11")
+		)
+		(instances
+			(project "rc-xbox-controller"
+				(path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+					(reference "#FLG02")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 234.95 113.03 0)
 		(unit 1)
@@ -5156,6 +5475,84 @@
 			(project "rc-xbox-controller"
 				(path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 					(reference "M1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 166.37 110.49 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e7b5fc0d-6ed9-4681-bbaf-b3bfb67e2a95")
+		(property "Reference" "#FLG01"
+			(at 166.37 108.585 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 166.37 105.41 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 166.37 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 166.37 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 166.37 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "0afed90c-db74-4ec9-ba5c-ec54f91534ea")
+		)
+		(instances
+			(project "rc-xbox-controller"
+				(path "/a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+					(reference "#FLG01")
 					(unit 1)
 				)
 			)
