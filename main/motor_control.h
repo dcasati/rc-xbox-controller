@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// RC Xbox Controller — Motor Control (TB6612FNG Channel A)
+// RC Xbox Controller — Motor Control (BTS7960 43A H-Bridge)
 
 #ifndef MOTOR_CONTROL_H
 #define MOTOR_CONTROL_H
